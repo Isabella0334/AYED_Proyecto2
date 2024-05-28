@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Administrar Base de Datos - AnimeVerse</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body, h1, h2, h3, h4, h5, h6 { font-family: "Lato", sans-serif; }
+        .navbar, h1, button { font-family: "Montserrat", sans-serif; }
+        .navbar { background-color: #f44336; padding: 10px; }
+        .navbar a { color: white; padding: 14px 20px; text-decoration: none; }
+        .navbar a:hover { background-color: #ddd; color: black; }
+        .header { padding: 128px 16px; background: #f44336; color: white; text-align: center; }
+        .content { padding: 64px; }
+        .form-container { margin: 20px 0; }
+        .form-container label, .form-container input, .form-container select, .form-container button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .table-container { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 18px; text-align: left; }
+        th, td { padding: 12px; border: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a href="Main.html">Menú</a>
+    <a href="Descubrir.html">Descubrir</a>
+    <a href="Recomendaciones.html">Recomendados</a>
+    <a href="Favoritos.html">Mis favoritos</a>
+    <a href="Admin.html">Administrar</a>
+</div>
+
+<!-- Header -->
+<header class="header">
+    <h1>Administrar Base de Datos</h1>
+</header>
+
+<!-- Content -->
+<div class="content">
+
+    <!-- Formulario para agregar un anime -->
+    <div class="form-container">
+        <h2>Agregar Anime</h2>
+        <form id="add-anime-form">
+            <label for="anime-name">Nombre del Anime:</label>
+            <input type="text" id="anime-name" name="anime-name" required>
+            
+            <label for="anime-type">Tipo (Serie / Película):</label>
+            <input type="text" id="anime-type" name="anime-type" required>
+            
+            <label for="anime-genre">Género:</label>
+            <input type="text" id="anime-genre" name="anime-genre" required>
+            
+            <label for="anime-studio">Estudio:</label>
+            <input type="text" id="anime-studio" name="anime-studio" required>
+            
+            <label for="anime-year">Año de Lanzamiento:</label>
+            <input type="number" id="anime-year" name="anime-year" required>
+            
+            <label for="anime-actors">Actores de Voz (separados por comas):</label>
+            <input type="text" id="anime-actors" name="anime-actors" required>
+            
+            <label for="anime-creator">Creador:</label>
+            <input type="text" id="anime-creator" name="anime-creator" required>
+            
+            <button type="submit">Agregar Anime</button>
+        </form>
+    </div>
+
+    <!-- Formulario para actualizar un anime -->
+    <div class="form-container">
+        <h2>Actualizar Anime</h2>
+        <form id="update-anime-form">
+            <label for="current-anime-name">Nombre del Anime Actual:</label>
+            <input type="text" id="current-anime-name" name="current-anime-name" required>
+            
+            <label for="update-anime-name">Nuevo Nombre del Anime:</label>
+            <input type="text" id="update-anime-name" name="update-anime-name">
+            
+            <label for="update-anime-type">Nuevo Tipo (Serie / Película):</label>
+            <input type="text" id="update-anime-type" name="update-anime-type">
+            
+            <label for="update-anime-genre">Nuevo Género:</label>
+            <input type="text" id="update-anime-genre" name="update-anime-genre">
+            
+            <label for="update-anime-studio">Nuevo Estudio:</label>
+            <input type="text" id="update-anime-studio" name="update-anime-studio">
+            
+            <label for="update-anime-year">Nuevo Año de Lanzamiento:</label>
+            <input type="number" id="update-anime-year" name="update-anime-year">
+            
+            <label for="update-anime-actors">Nuevos Actores de Voz (separados por comas):</label>
+            <input type="text" id="update-anime-actors" name="update-anime-actors">
+            
+            <label for="update-anime-creator">Nuevo Creador:</label>
+            <input type="text" id="update-anime-creator" name="update-anime-creator">
+            
+            <button type="submit">Actualizar Anime</button>
+        </form>
+    </div>
+
+    <!-- Formulario para eliminar un anime -->
+    <div class="form-container">
+        <h2>Eliminar Anime</h2>
+        <form id="delete-anime-form">
+            <label for="delete-anime-name">Nombre del Anime:</label>
+            <input type="text" id="delete-anime-name" name="delete-anime-name" required>
+            <button type="submit">Eliminar Anime</button>
+        </form>
+    </div>
+
+<!-- Sección para listar los animes actuales -->
+<div class="table-container">
+    <h2>Animes Actuales</h2>
+    <table id="anime-list">
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Género</th>
+            <th>Estudio</th>
+            <th>Año de Lanzamiento</th>
+            <th>Actores de Voz</th>
+            <th>Creador</th>
+        </tr>
+        <!-- Contenido dinámico aquí -->
+    </table>
+</div>
+
+</div>
+
+<script>
+$(document).ready(function() {
+    // Cargar la lista de animes actuales
+    $.get('http://127.0.0.1:5000/animes', function(data) {
+        data.forEach(function(anime) {
+            $('#anime-list').append('<tr>' +
+                '<td>' + anime.nombre + '</td>' +
+                '<td>' + anime.tipo + '</td>' +
+                '<td>' + anime.generos.join(', ') + '</td>' +
+                '<td>' + anime.estudio + '</td>' +
+                '<td>' + anime.ano + '</td>' +
+                '<td>' + anime.actores.join(', ') + '</td>' +
+                '<td>' + anime.creador + '</td>' +
+                '</tr>');
+        });
+    });
+
+    // Lógica para agregar un anime
+    $('#add-anime-form').submit(function(event) {
+        event.preventDefault();
+        // Capturar los datos del formulario
+        const animeData = {
+            nombre: $('#anime-name').val(),
+            tipo: $('#anime-type').val(),
+            generos: $('#anime-genre').val().split(','),
+            estudio: $('#anime-studio').val(),
+            ano: $('#anime-year').val(),
+            actores: $('#anime-actors').val().split(','),
+            creador: $('#anime-creator').val()
+        };
+        // Realizar una solicitud POST para agregar el anime
+        $.ajax({
+            url: 'http://127.0.0.1:5000/animes',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(animeData),
+            success: function(response) {
+                alert('Anime agregado exitosamente!');
+                location.reload(); // Recargar la página para mostrar la lista actualizada
+            }
+        });
+    });
+
+    // Lógica para actualizar un anime
+    $('#update-anime-form').submit(function(event) {
+        event.preventDefault();
+        const currentName = $('#current-anime-name').val();
+        const updatedData = {
+            nombre: $('#update-anime-name').val(),
+            tipo: $('#update-anime-type').val(),
+            generos: $('#update-anime-genre').val().split(','),
+            estudio: $('#update-anime-studio').val(),
+            ano: $('#update-anime-year').val(),
+            actores: $('#update-anime-actors').val().split(','),
+            creador: $('#update-anime-creator').val()
+        };
+        // Filtrar solo los campos no vacíos
+        const filteredData = Object.fromEntries(Object.entries(updatedData).filter(([key, value]) => value));
+        $.ajax({
+            url: `http://127.0.0.1:5000/animes/${currentName}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(filteredData),
+            success: function(response) {
+                alert('Anime actualizado exitosamente!');
+                location.reload(); // Recargar la página para mostrar la lista actualizada
+            }
+        });
+    });
+
+    // Lógica para eliminar un anime
+    $('#delete-anime-form').submit(function(event) {
+        event.preventDefault();
+        const nameToDelete = $('#delete-anime-name').val();
+        $.ajax({
+            url: `http://127.0.0.1:5000/animes/${nameToDelete}`,
+            type: 'DELETE',
+            success: function(response) {
+                alert('Anime eliminado exitosamente!');
+                location.reload(); // Recargar la página para mostrar la lista actualizada
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>

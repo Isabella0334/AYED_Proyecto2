@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>AnimeVerse</title>
+    <title>Descubrir - AnimeVerse</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -16,7 +16,9 @@
         table { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 18px; text-align: left; }
         th, td { padding: 12px; border: 1px solid #ddd; }
         th { background-color: #f2f2f2; }
+        input[type="text"] { width: 100%; padding: 12px; margin: 12px 0; box-sizing: border-box; }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -26,6 +28,7 @@
     <a href="Descubrir.html">Descubrir</a>
     <a href="Recomendaciones.html">Recomendados</a>
     <a href="Favoritos.html">Mis favoritos</a>
+    <a href="Admin.html">Administrar</a>
 </div>
 
 <!-- Header -->
@@ -35,8 +38,9 @@
 
 <!-- Content -->
 <div class="content">
+    <input type="text" id="search" placeholder="Buscar animes...">
     <div class="table-container">
-        <table>
+        <table id="anime-table">
             <tr>
                 <th>No.</th>
                 <th>Nombre</th>
@@ -53,6 +57,40 @@
         </table>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $.get('http://127.0.0.1:5000/animes', function(data) {
+        data.forEach(function(anime, index) {
+            $('#anime-table').append('<tr>' +
+                '<td>' + (index + 1) + '</td>' +
+                '<td>' + anime.nombre + '</td>' +
+                '<td>' + anime.tipo + '</td>' +
+                '<td>' + anime.generos.join(', ') + '</td>' +
+                '<td>' + anime.estudio + '</td>' +
+                '<td>' + anime.ano + '</td>' +
+                '<td>' + 'N/A' + '</td>' + // Aquí puedes agregar lógica para la aceptación
+                '<td>' + anime.actores.join(', ') + '</td>' +
+                '<td>' + anime.creador + '</td>' +
+                '<td><button class="fav-btn">Agregar a Favoritos</button></td>' +
+                '</tr>');
+        });
+    });
+
+    // Lógica para agregar a favoritos (por implementar)
+    $(document).on('click', '.fav-btn', function() {
+        alert('Agregado a favoritos!');
+    });
+
+    // Funcionalidad de búsqueda dinámica
+    $('#search').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#anime-table tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
 
 </body>
 </html>

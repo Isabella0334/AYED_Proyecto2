@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>AnimeVerse</title>
+    <title>Favoritos - AnimeVerse</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -17,6 +17,7 @@
         th, td { padding: 12px; border: 1px solid #ddd; }
         th { background-color: #f2f2f2; }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -26,6 +27,7 @@
     <a href="Descubrir.html">Descubrir</a>
     <a href="Recomendaciones.html">Recomendados</a>
     <a href="Favoritos.html">Mis favoritos</a>
+    <a href="Admin.html">Administrar</a>
 </div>
 
 <!-- Header -->
@@ -36,7 +38,7 @@
 <!-- Content -->
 <div class="content">
     <div class="table-container">
-        <table>
+        <table id="favorites-table">
             <tr>
                 <th>No.</th>
                 <th>Nombre</th>
@@ -47,12 +49,18 @@
                 <th>Aceptación</th>
                 <th>Actores de voz</th>
                 <th>Creador</th>
-                <th>Favorito</th>
+                <th>Eliminar</th>
             </tr>
             <!-- Contenido dinámico aquí -->
         </table>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    // Aquí puedes agregar la lógica para cargar los favoritos desde la base de datos o almacenamiento local
+});
+</script>
 
 </body>
 </html>
