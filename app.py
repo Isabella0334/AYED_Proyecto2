@@ -1,12 +1,14 @@
 from flask import Flask, jsonify, request
 from neo4j import GraphDatabase
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Configuración de conexión a Neo4j Sandbox
-uri = "bolt://sandbox.neo4j.io:7687"  # Reemplaza con la URL de tu sandbox
-user = "neo4j"  # Reemplaza con tu nombre de usuario
-password = "your_sandbox_password"  # Reemplaza con tu contraseña
+uri = "bolt://3.219.33.20:7687"  # Reemplaza con la URL de tu sandbox
+user = "neo4j"
+password = "farads-photos-tablets"
 
 driver = GraphDatabase.driver(uri, auth=(user, password))
 
